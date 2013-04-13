@@ -980,6 +980,8 @@ class VmManagerWindow(Ui_VmManagerWindow, QMainWindow):
                 running = widget.vm.last_running
                 if not running:
                     self.table.setRowHidden(row_no, True)
+                else:
+                    self.table.setRowHidden(row_no, False)
                 row_no += 1
 
     def mark_table_for_update(self):
