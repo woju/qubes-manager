@@ -1837,6 +1837,23 @@ def handle_exception( exc_type, exc_value, exc_traceback ):
 def sighup_handler(signum, frame):
     os.execl("/usr/bin/qubes-manager", "qubes-manager")
 
+try:
+    import objgraph
+    def sighandler_show_growth(sig, frame):
+        print('== objgraph.show_growth():')
+        objgraph.show_growth(shortnames=False)
+
+except ImportError:
+    print("WARNING: objgraph module not installed")
+    def sighandler_show_growth(sig, frame):
+        print("ERROR: objgraph module not installed")
+
+
+def sighandler_pdb(sig, frame):
+    import pdb
+    pyqtRemoveInputHook()
+    pdb.set_trace()
+
 def main():
     # Avoid starting more than one instance of the app
     lock = QubesDaemonPidfile ("qubes-manager")
@@ -1853,6 +1870,8 @@ def main():
     lock.create_pidfile()
 
     signal.signal(signal.SIGHUP, sighup_handler)
+    signal.signal(signal.SIGINT, sighandler_show_growth)
+    signal.signal(signal.SIGQUIT, sighandler_pdb)
 
     global qubes_host
     qubes_host = QubesHost()
