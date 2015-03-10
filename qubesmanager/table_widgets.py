@@ -160,6 +160,13 @@ class VmNameItem (QTableWidgetItem):
         self.setTextAlignment(Qt.AlignVCenter)
         self.qid = vm.qid
 
+    def __lt__(self, other):
+        if self.vm.qid == 0:
+            return True
+        elif other.vm.qid == 0:
+            return False
+        return super(VmNameItem, self).__lt__(other)
+
 
 class VmStatusIcon(QLabel):
     def __init__(self, vm, parent=None):
@@ -342,6 +349,14 @@ class VmInternalItem(QTableWidgetItem):
             self.setText("Yes")
         else:
             self.setText("")
+
+    def __lt__(self, other):
+        if self.vm.qid == 0:
+            return True
+        elif other.vm.qid == 0:
+            return False
+        return super(VmInternalItem, self).__lt__(other)
+
 
 class VmUsageBarWidget (QWidget):
 
@@ -654,6 +669,13 @@ class VmIPItem(QTableWidgetItem):
         else:
             self.setText("n/a")
 
+    def __lt__(self, other):
+        if self.vm.qid == 0:
+            return True
+        elif other.vm.qid == 0:
+            return False
+        return super(VMIPItem, self).__lt__(other)
+
 class VmIncludeInBackupsItem(QTableWidgetItem):
     def __init__(self, vm):
         super(VmIncludeInBackupsItem, self).__init__()
@@ -666,7 +688,11 @@ class VmIncludeInBackupsItem(QTableWidgetItem):
             self.setText("")
 
     def __lt__(self, other):
-        if self.vm.include_in_backups == other.vm.include_in_backups:
+        if self.vm.qid == 0:
+            return True
+        elif other.vm.qid == 0:
+            return False
+        elif self.vm.include_in_backups == other.vm.include_in_backups:
             return self.vm.qid < other.vm.qid
         else:
             return self.vm.include_in_backups < other.vm.include_in_backups
