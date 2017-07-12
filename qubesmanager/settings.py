@@ -273,11 +273,6 @@ class VMSettingsWindow(Ui_SettingsDialog, QDialog):
         except AttributeError:
             self.autostart_vm.setVisible(False)
 
-        # XXX - False?
-        self.seamless_gui.setVisible(True)
-        self.seamless_gui.setChecked(
-            self.vm.features.get('seamless-gui', False))
-
         #type
         self.type_label.setText(type(self.vm).__name__)
 
@@ -357,15 +352,6 @@ class VMSettingsWindow(Ui_SettingsDialog, QDialog):
             if self.autostart_vm.isVisible():
                 if self.vm.autostart != self.autostart_vm.isChecked():
                     self.vm.autostart = self.autostart_vm.isChecked()
-                    self.anything_changed = True
-        except Exception as ex:
-            msg.append(str(ex))
-
-        #seamless_gui
-        try:
-            if self.seamless_gui.isVisible():
-                if self.vm.seamless_gui_mode != self.seamless_gui.isChecked():
-                    self.vm.seamless_gui_mode = self.seamless_gui.isChecked()
                     self.anything_changed = True
         except Exception as ex:
             msg.append(str(ex))
@@ -570,28 +556,6 @@ class VMSettingsWindow(Ui_SettingsDialog, QDialog):
                     # to False.
                     self.vm.uses_default_kernel = uses_default_kernel
                     self.anything_changed = True
-            except Exception as ex:
-                msg.append(str(ex))
-
-        if hasattr(self.vm, "drive") and self.drive_groupbox.isVisible():
-            try:
-                if not self.drive_groupbox.isChecked():
-                    if self.vm.drive != None:
-                        self.vm.drive = None
-                        self.anything_changed = True
-                else:
-                    new_domain = str(self.drive_domain.currentText())
-                    if self.drive_domain.currentIndex() == self.drive_domain_idx:
-                        # strip "(current)"
-                        new_domain = new_domain.split(' ')[0]
-                    drive = "%s:%s:%s" % (
-                        str(self.drive_type.currentText()),
-                        new_domain,
-                        str(self.drive_path.text())
-                    )
-                    if self.vm.drive != drive:
-                        self.vm.drive = drive
-                        self.anything_changed = True
             except Exception as ex:
                 msg.append(str(ex))
 
